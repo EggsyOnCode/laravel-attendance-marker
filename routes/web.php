@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\SessionController;
 
 // Login Page
 Route::get('/login', function () {
@@ -27,5 +28,12 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+
+Route::get('/create-session', [SessionController::class, 'create'])->name('create.session');
+Route::post('/store-session', [SessionController::class, 'store'])->name('store.session');
+
+
+Route::get('/mark_attendance/{sessionid}', [AttendanceController::class, 'create'])->name('attendance.create');
+Route::post('/mark_attendance/{sessionid}', [AttendanceController::class, 'store'])->name('attendance.store');
 
 

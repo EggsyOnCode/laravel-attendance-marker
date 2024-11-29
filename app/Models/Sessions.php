@@ -27,4 +27,12 @@ class Session extends Model
     {
         return $this->hasMany(Attendance::class, 'sessionid');
     }
+
+    public static function getTeacherSessionsForDay($teacherId, $date)
+    {
+        return self::join('class', 'sessions.classid', '=', 'class.id')
+            ->where('class.teacherid', $teacherId)
+            ->where('sessions.session_date', $date)
+            ->get(['sessions.id AS session_id', 'class.id AS class_id', 'sessions.starttime', 'sessions.endtime', 'sessions.session_date']);
+    }
 }

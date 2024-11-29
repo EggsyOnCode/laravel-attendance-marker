@@ -9,6 +9,9 @@ class Attendance extends Model
 {
     use HasFactory;
 
+    protected $table = 'attendance'; 
+    public $timestamps = false; // Disable automatic timestamps
+
     protected $fillable = [
         'classid',
         'sessionid',
@@ -33,5 +36,20 @@ class Attendance extends Model
     public function classModel()
     {
         return $this->belongsTo(ClassModel::class, 'classid');
+    }
+
+    public static function updateOrCreateAttendance($classId, $sessionId, $studentId, $isPresent, $status)
+    {
+        return self::updateOrCreate(
+            [
+                'class_id' => $classId,
+                'session_id' => $sessionId,
+                'student_id' => $studentId,
+            ],
+            [
+                'is_present' => $isPresent,
+                'status' => $status,
+            ]
+        );
     }
 }
