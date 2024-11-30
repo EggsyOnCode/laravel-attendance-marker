@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Session extends Model
 {
     use HasFactory;
+    public $timestamps = false; // Disable automatic timestamps
 
     protected $fillable = [
         'classid',

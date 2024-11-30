@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB; // Import DB facade
 
 class Attendance extends Model
 {
@@ -38,18 +39,36 @@ class Attendance extends Model
         return $this->belongsTo(ClassModel::class, 'classid');
     }
 
+    public $incrementing = false; // Disable auto-incrementing ID
+    protected $primaryKey = null; // Disable the primary key completely
+
+    // Use the unique attributes to find records
+    public function updateAttendance($data)
+    {
+        return DB::table($this->table)
+            ->where('sessionid', $data['sessionid'])
+            ->where('classid', $data['classid'])
+            ->where('studentid', $data['studentid'])
+            ->update([
+                'isPresent' => $data['isPresent'],
+                'comments' => $data['comments'],
+            ]);
+    }
+
+
     public static function updateOrCreateAttendance($classId, $sessionId, $studentId, $isPresent, $status)
     {
         return self::updateOrCreate(
             [
-                'class_id' => $classId,
-                'session_id' => $sessionId,
-                'student_id' => $studentId,
+                'classid' => $classId,
+                'sessionid' => $sessionId,
+                'studentid' => $studentId,
             ],
             [
-                'is_present' => $isPresent,
-                'status' => $status,
+                'isPresent' => $isPresent,
+                'comments' => $status,
             ]
         );
     }
+
 }

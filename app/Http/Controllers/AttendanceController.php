@@ -46,46 +46,54 @@ class AttendanceController extends Controller
 
     public function store(Request $request, $sessionId)
     {
-    // Fetch the class ID associated with the session
-    $classId = Session::findOrFail($sessionId)->classid;
+        \DB::enableQueryLog();
 
-    // Get attendance data from the request
-    $attendanceData = $request->input('attendance', []); // Checkboxes for attendance
-    $statusData = $request->input('status', []);         // Dropdowns for status
+        // Fetch the class ID associated with the session
+        $classId = Session::findOrFail($sessionId)->classid;
 
-    // Loop through all students in the attendance data
-    foreach ($statusData as $studentId => $status) {
-        // Determine if the student is present or absent
-        $isPresent = isset($attendanceData[$studentId]) ? 1 : 0;
+        // Get attendance data from the request
+        $attendanceData = $request->input('attendance', []); // Checkboxes for attendance
+        $statusData = $request->input('status', []);         // Dropdowns for status
 
-        // Check if an entry exists for this session, class, and student
-        $attendance = Attendance::where([
-            ['sessionid', '=', $sessionId],
-            ['classid', '=', $classId],
-            ['studentid', '=', $studentId],
-        ])->first();
+        // Loop through all students in the attendance data
+        foreach ($statusData as $studentId => $status) {
+            // Determine if the student is present or absent
+            $isPresent = isset($attendanceData[$studentId]) ? 1 : 0;
 
-        if ($attendance) {
-            // Update existing attendance record
-            $attendance->update([
-                'isPresent' => $isPresent,
-                'comments' => $status,
-            ]);
-        } else {
-            // Insert a new attendance record
-            Attendance::create([
-                'sessionid' => $sessionId,
-                'classid' => $classId,
-                'studentid' => $studentId,
-                'isPresent' => $isPresent,
-                'comments' => $status,
-            ]);
+            // Attempt to find an existing attendance record
+            $attendance = Attendance::where([
+                ['sessionid', '=', $sessionId],
+                ['classid', '=', $classId],
+                ['studentid', '=', $studentId],
+            ])->first();
+
+            if ($attendance) {
+                // Update existing attendance record
+
+                $attendance->updateAttendance([
+                    'sessionid' => $sessionId,
+                    'classid' => $classId,
+                    'studentid' => $studentId,
+                    'isPresent' => $isPresent,
+                    'comments' => $status,
+                ]);
+
+            } else {
+                // Insert a new attendance record
+                Attendance::create([
+                    'sessionid' => $sessionId,
+                    'classid' => $classId,
+                    'studentid' => $studentId,
+                    'isPresent' => $isPresent,
+                    'comments' => $status,
+                ]);
+            }
         }
+
+        // Redirect back to the teacher dashboard with a success message
+        return redirect()->route('teacher.dashboard')->with('success', 'Attendance has been recorded.');
     }
 
-    // Redirect back to the teacher dashboard with a success message
-    return redirect()->route('teacher.dashboard')->with('success', 'Attendance has been recorded.');
-    }
 
 
 }
