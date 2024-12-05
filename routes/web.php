@@ -7,6 +7,11 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SessionController;
 
+// Reroute to login page
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
 // Login Page
 Route::get('/login', function () {
     return view('login');
