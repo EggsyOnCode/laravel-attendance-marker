@@ -129,6 +129,73 @@
     background-color: #20336c;
   }
   
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f8f8;
+}
+
+.red {
+    color: white;
+    background-color: #e74c3c;
+}
+
+.yellow {
+    background-color: #f1c40f;
+}
+
+.green {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.percentage {
+    font-weight: bold;
+}
+  .button {
+    margin-top: 10px;
+    background-color: var(--theme_colour);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .button:hover {
+    background-color: #2b4697;
+  }
+  
+  .button:active {
+    background-color: #20336c;
+  }
   form button:not(:last-child) {
     margin-right: 10px;
   }
